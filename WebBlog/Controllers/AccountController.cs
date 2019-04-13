@@ -16,7 +16,7 @@ namespace WebBlog.Controllers
 {
     [Produces("application/json")]
     [Route("api/Account")]
-    [RequireHttps]
+    //[RequireHttps]
     public class AccountController : ControllerBase
     {
         readonly UserManager<DbUser> _userManager;
@@ -27,7 +27,6 @@ namespace WebBlog.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]Credentials credentials)
         {
