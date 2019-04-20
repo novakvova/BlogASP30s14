@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using WebBlog.DAL.Entities;
+using WebBlog.Helpers;
 using WebBlog.ViewModels;
 
 namespace WebBlog.Controllers
@@ -70,6 +71,31 @@ namespace WebBlog.Controllers
 
             var jwt = new JwtSecurityToken(signingCredentials: signingCredentials, claims: claims);
             return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody]CustomRegisterModel model)
+        {
+            if(!ModelState.IsValid)
+            {
+                var errors = CustomValidator.GetErrorsByModel(ModelState);
+                return BadRequest(errors);
+            }
+            var user = new DbUser
+            {
+                UserName = model.Email,
+                Email = model.Email
+            };
+
+            var result = await _userManager
+                .CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+            {
+                return BadRequest("Bad create user!");
+            }
+
+
+            return Ok();
         }
     }
 }
