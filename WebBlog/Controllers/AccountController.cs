@@ -53,7 +53,6 @@ namespace WebBlog.Controllers
         {
             var roles = _userManager.GetRolesAsync(user).Result;
 
-
             var claims = new List<Claim>()
             {
                 //new Claim(JwtRegisteredClaimNames.Sub, user.Id)
@@ -94,8 +93,9 @@ namespace WebBlog.Controllers
                 return BadRequest("Bad create user!");
             }
 
-
-            return Ok();
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return Ok(CreateToken(user));
         }
+
     }
 }

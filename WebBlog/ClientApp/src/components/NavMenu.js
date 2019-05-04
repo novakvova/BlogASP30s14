@@ -1,9 +1,10 @@
 import React from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './NavMenu.css';
 
-export default class NavMenu extends React.Component {
+class NavMenu extends React.Component {
   constructor (props) {
     super(props);
 
@@ -18,6 +19,18 @@ export default class NavMenu extends React.Component {
     });
   }
   render () {
+    console.log('----props----', this.props);
+    const { isAuth }=this.props.auth;
+    const logoutLink = (
+      <li className="nav-item">
+        <a href="#" className="text-dark nav-link">Logout</a>
+      </li>
+    );
+    const loginLink = (
+      <NavItem>
+        <NavLink tag={Link} className="text-dark" to="/login">Login</NavLink>
+      </NavItem>
+    );
     return (
       <header>
         <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" light >
@@ -30,9 +43,6 @@ export default class NavMenu extends React.Component {
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/login">Login</NavLink>
-                </NavItem>
-                <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/register">Register</NavLink>
                 </NavItem>
                 <NavItem>
@@ -41,6 +51,7 @@ export default class NavMenu extends React.Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
                 </NavItem>
+                {isAuth ? logoutLink : loginLink}
               </ul>
             </Collapse>
           </Container>
@@ -49,3 +60,10 @@ export default class NavMenu extends React.Component {
     );
   }
 }
+const mapStateToProps = (stateRedux) => {
+  return {
+    auth: stateRedux.auth
+  }
+}
+
+export default connect(mapStateToProps)(NavMenu);
