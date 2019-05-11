@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import classnames from 'classnames';
 import jwt from 'jsonwebtoken';
-
+import { connect } from 'react-redux';
+import { SET_CURRENT_USER } from '../../../actions/types';
 class RegisterForm extends Component {
     constructor(props) {
         super(props);
@@ -36,6 +37,7 @@ class RegisterForm extends Component {
                         let token = resp.data; 
                         let user = jwt.decode(token);
                         localStorage.setItem('jwtToken', token);
+                        this.props.dispatch({type: SET_CURRENT_USER, user});
                         console.log('---user----',user);
                     },
                     (badResp) => {
@@ -148,4 +150,4 @@ class RegisterForm extends Component {
 }
 
 
-export default RegisterForm;
+export default connect()(RegisterForm);

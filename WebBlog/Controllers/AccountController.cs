@@ -30,30 +30,6 @@ namespace WebBlog.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
-            var users= _context //_userManager
-                .Users
-                //.Include(u => u.UserRoles)
-                //.ThenInclude(ur => ur.Role)
-                .Select(u=> new
-                {
-                    u.Id,
-                    u.Email,
-                    Roles= u.UserRoles.Select(r=>new
-                    {
-                        r.Role.Id,
-                        r.Role.Name
-                    })
-                })
-                .ToList();
-            //var model1 = _context.Users
-            //   //.Include(r => r.Roles)
-            //   .Select(u => new
-            //   {
-            //       Id = u.Id,
-            //       Email = u.Email//,
-            //       //Roles = u.Roles.Select(ur => new { ur.Id, ur.Name })
-            //   }).ToList();
-
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]Credentials credentials)

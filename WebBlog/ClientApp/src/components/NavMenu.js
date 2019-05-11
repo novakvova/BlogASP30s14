@@ -3,6 +3,7 @@ import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLi
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './NavMenu.css';
+import { SET_CURRENT_USER } from '../actions/types';
 
 class NavMenu extends React.Component {
   constructor (props) {
@@ -18,12 +19,17 @@ class NavMenu extends React.Component {
       isOpen: !this.state.isOpen
     });
   }
+  logout = (e) =>{
+    e.preventDefault();
+    localStorage.removeItem("jwtToken");
+    this.props.dispatch({type: SET_CURRENT_USER, user: {}});
+  }
   render () {
-    console.log('----props----', this.props);
-    const { isAuth }=this.props.auth;
+    console.log('----props navMenu----', this.props);
+    const { isAuthenticated }=this.props.auth;
     const logoutLink = (
       <li className="nav-item">
-        <a href="#" className="text-dark nav-link">Logout</a>
+        <a href="#" className="text-dark nav-link" onClick={this.logout}>Logout</a>
       </li>
     );
     const loginLink = (
@@ -51,7 +57,7 @@ class NavMenu extends React.Component {
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
                 </NavItem>
-                {isAuth ? logoutLink : loginLink}
+                {isAuthenticated ? logoutLink : loginLink}
               </ul>
             </Collapse>
           </Container>

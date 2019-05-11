@@ -10,7 +10,6 @@ export default function configureStore (history, initialState) {
     counter: Counter.reducer,
     weatherForecasts: WeatherForecasts.reducer,
     auth
-
   };
 
   const middleware = [

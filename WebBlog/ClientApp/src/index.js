@@ -7,6 +7,8 @@ import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
+import jwt from 'jsonwebtoken';
+import { SET_CURRENT_USER } from './actions/types';
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
@@ -16,6 +18,9 @@ const history = createBrowserHistory({ basename: baseUrl });
 const initialState = window.initialReduxState;
 const store = configureStore(history, initialState);
 
+let token=localStorage.getItem("jwtToken");
+let user = jwt.decode(token);
+store.dispatch({type: SET_CURRENT_USER, user});
 
 const rootElement = document.getElementById('root');
 
