@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebBlog.DAL.Entities
 {
-    public class DbUser : IdentityUser
+    public class DbRole : IdentityRole
     {
         public ICollection<DbUserRole> UserRoles { get; set; }
     }

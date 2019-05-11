@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using WebBlog.DAL.Entities;
 using WebBlog.Helpers;
 using WebBlog.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebBlog.Controllers
 {
@@ -20,13 +21,39 @@ namespace WebBlog.Controllers
     //[RequireHttps]
     public class AccountController : ControllerBase
     {
-        readonly UserManager<DbUser> _userManager;
-        readonly SignInManager<DbUser> _signInManager;
+        private readonly UserManager<DbUser> _userManager;
+        private readonly SignInManager<DbUser> _signInManager;
+        private readonly EFContext _context;
         public AccountController(UserManager<DbUser> userManager,
-            SignInManager<DbUser> signInManager)
+            SignInManager<DbUser> signInManager, EFContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
+            var users= _context //_userManager
+                .Users
+                //.Include(u => u.UserRoles)
+                //.ThenInclude(ur => ur.Role)
+                .Select(u=> new
+                {
+                    u.Id,
+                    u.Email,
+                    Roles= u.UserRoles.Select(r=>new
+                    {
+                        r.Role.Id,
+                        r.Role.Name
+                    })
+                })
+                .ToList();
+            //var model1 = _context.Users
+            //   //.Include(r => r.Roles)
+            //   .Select(u => new
+            //   {
+            //       Id = u.Id,
+            //       Email = u.Email//,
+            //       //Roles = u.Roles.Select(ur => new { ur.Id, ur.Name })
+            //   }).ToList();
+
         }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]Credentials credentials)
@@ -36,6 +63,7 @@ namespace WebBlog.Controllers
                 
                 return BadRequest(new { invalid="Problem validation" });
             }
+           
 
             var result = await _signInManager
                 .PasswordSignInAsync(credentials.Email, credentials.Password,

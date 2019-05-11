@@ -30,8 +30,11 @@ namespace WebBlog
                 opt.UseSqlServer(Configuration
                     .GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<DbUser, IdentityRole>()
-                .AddEntityFrameworkStores<EFContext>();
+            //services.AddIdentity<DbUser, DbRole>()
+            //    .AddEntityFrameworkStores<EFContext>();
+            services.AddIdentity<DbUser, DbRole>(options => options.Stores.MaxLengthForKeys = 128)
+                .AddEntityFrameworkStores<EFContext>()
+                .AddDefaultTokenProviders();
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("this is the secret phrase"));
 
